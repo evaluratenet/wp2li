@@ -8,6 +8,7 @@ class Config:
     
     # RSS Feed settings
     RSS_FEED_URL = os.environ.get('RSS_FEED_URL', 'https://blog.mmlogistix.com/feed/')
+    RSS_POSTS_PER_PAGE = int(os.environ.get('RSS_POSTS_PER_PAGE', 50))
     
     # File paths
     POSTS_FILE = 'data/posts.json'
