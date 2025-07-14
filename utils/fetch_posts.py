@@ -4,6 +4,7 @@ from datetime import datetime
 import os
 import logging
 import urllib.parse
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +24,34 @@ def get_rss_url_with_params(base_url, posts_per_page=50):
         parsed.scheme, parsed.netloc, parsed.path,
         parsed.params, new_query, parsed.fragment
     ))
+
+def clean_html_content(html_content):
+    """Extract and clean text content while preserving formatting"""
+    if not html_content:
+        return ""
+    
+    soup = BeautifulSoup(html_content, 'html.parser')
+    
+    # Remove script and style elements
+    for script in soup(["script", "style"]):
+        script.decompose()
+    
+    # Replace common HTML elements with appropriate line breaks
+    for tag in soup.find_all(['p', 'br', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
+        if tag.name == 'br':
+            tag.replace_with('\n')
+        else:
+            tag.append('\n')
+    
+    # Get text and clean up whitespace
+    text = soup.get_text()
+    
+    # Clean up multiple line breaks and spaces
+    text = re.sub(r'\n\s*\n', '\n\n', text)  # Replace multiple line breaks with double line breaks
+    text = re.sub(r' +', ' ', text)  # Replace multiple spaces with single space
+    text = re.sub(r'\n +', '\n', text)  # Remove leading spaces after line breaks
+    
+    return text.strip()
 
 def fetch_blog_posts():
     try:
@@ -83,9 +112,11 @@ def fetch_blog_posts():
                         published = entry.published or ""
                         content_html = entry.get("content", [{}])[0].get("value", "") or entry.get("summary", "")
 
-                        # Parse content to extract images
+                        # Extract and clean text content while preserving formatting
+                        text_content = clean_html_content(content_html)
+                        
+                        # Extract images
                         soup = BeautifulSoup(content_html, 'html.parser')
-                        text_content = soup.get_text("\n", strip=True)
                         image_urls = [img['src'] for img in soup.find_all('img') if 'src' in img.attrs]
 
                         post_data = {
