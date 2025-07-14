@@ -10,6 +10,13 @@ class Config:
     RSS_FEED_URL = os.environ.get('RSS_FEED_URL', 'https://blog.mmlogistix.com/feed/')
     RSS_POSTS_PER_PAGE = int(os.environ.get('RSS_POSTS_PER_PAGE', 50))  # Number of posts to fetch from RSS
     
+    # Alternative RSS URLs to try if main feed is limited
+    RSS_ALTERNATIVE_URLS = [
+        'https://blog.mmlogistix.com/feed/?posts_per_rss=50',
+        'https://blog.mmlogistix.com/feed/?posts_per_rss=100',
+        'https://blog.mmlogistix.com/feed/?posts_per_rss=200'
+    ]
+    
     # File paths
     POSTS_FILE = 'data/posts.json'
     
