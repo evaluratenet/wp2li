@@ -8,7 +8,7 @@ import urllib.parse
 logger = logging.getLogger(__name__)
 
 def get_rss_url_with_params(base_url, posts_per_page=50):
-    """Add parameters to RSS URL to get more posts"""
+    """Add parameters to RSS URL to get more posts from WordPress"""
     parsed = urllib.parse.urlparse(base_url)
     query_params = urllib.parse.parse_qs(parsed.query)
     
