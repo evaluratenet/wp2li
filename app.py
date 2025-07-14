@@ -142,4 +142,8 @@ def create_app(config_name='default'):
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(debug=app.config['DEBUG'])
+    # Get port from environment variable (for Render) or default to 5000
+    port = int(os.environ.get('PORT', 5000))
+    
+    # Bind to 0.0.0.0 for production deployment
+    app.run(host='0.0.0.0', port=port, debug=app.config['DEBUG'])
