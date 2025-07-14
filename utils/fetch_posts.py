@@ -1,3 +1,4 @@
+# Minor change: Trigger redeploy for fetch_posts.py (2024-07-14)
 import feedparser
 from bs4 import BeautifulSoup
 from datetime import datetime
